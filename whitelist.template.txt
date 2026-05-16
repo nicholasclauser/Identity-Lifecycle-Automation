@@ -1,0 +1,10 @@
+# Whitelist for accounts that should NEVER be touched by lifecycle scripts.
+# One SamAccountName per line. Comments start with '#'.
+#
+# Copy this file to 'whitelist.txt' and add your protected accounts.
+# whitelist.txt is gitignored to keep real account names out of source control.
+#
+# Examples:
+# jdoe
+# admin.smith
+# break-glass-account

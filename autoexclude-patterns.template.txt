@@ -1,0 +1,50 @@
+# DisplayName auto-exclude regex patterns. One pattern per line.
+# Comments start with '#'. Patterns are case-insensitive.
+#
+# Used by Get-ADLifecycleReport.ps1 to push matching accounts to the L3 sheet
+# (service accounts, system accounts, shared mailboxes, vendor accounts, etc.)
+# instead of treating them as real user accounts.
+#
+# Copy this file to 'autoexclude-patterns.txt' and customize for your environment.
+# autoexclude-patterns.txt is gitignored to keep company-specific patterns out of source.
+
+# --- Generic system / service patterns ---
+support
+admin
+azure
+noreply
+no-reply
+service\s*(account|desk|request)
+svc
+sccm
+o365
+power\s*automate
+power\s*bi
+smtp
+auth
+crm
+fortigate
+vmware
+netwrix
+
+# --- Test / system / migration accounts ---
+selenium
+test\s*user
+test\s*mailbox
+migrate
+msol_
+
+# --- Generic shared mailbox patterns ---
+billing
+calendar
+inquiries
+correspondence
+\bbackup\b
+\bmonitoring\b
+incident\s*management
+
+# --- Add your environment-specific patterns below ---
+# Examples of patterns to consider for your environment:
+#   <yourcompany>\s*(teams|erp|portal)
+#   <internal-app-prefix>
+#   <vendor-name>

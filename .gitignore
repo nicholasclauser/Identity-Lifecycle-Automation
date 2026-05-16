@@ -1,0 +1,45 @@
+# Secrets and runtime state
+.env
+*.env
+!.env.example
+whitelist.txt
+autoexclude-patterns.txt
+offboard.csv
+
+# Logs and transcripts
+*.log
+Transcript.log
+
+# Generated outputs
+Reports/
+out/
+output/
+*.xlsx
+*.xlsm
+
+# Secret / credential file extensions (defense in depth)
+*.pem
+*.key
+*.pfx
+*.p12
+*.cer
+*.crt
+*.jks
+*.kdbx
+*.pgp
+*.gpg
+*.asc
+
+# PowerShell history and ad-hoc local-only files
+PSReadLine/*
+*.local.ps1
+*.secret.ps1
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+.vscode/
+.idea/
+*.swp
