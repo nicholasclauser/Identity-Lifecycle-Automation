@@ -73,7 +73,7 @@ Single-action confirmed offboarding with audit trail.
 - **Read-only audit before any write.** No script in this repo modifies AD without an explicit interactive confirmation or `-WhatIf` preview path.
 - **Cross-functional reach.** The two-sheet split means HR, L2, and L3 each see exactly what they need to action, and none of what they don't.
 - **License reclamation as a side effect.** The Title-to-DISABLED design turns M365 license deassignment into an automatic consequence of standard offboarding rather than a separate workflow step.
-- **Production-grade PowerShell.** `[CmdletBinding(SupportsShouldProcess)]`, comment-based help, `.env`-driven config, try/catch with structured error capture, `Start-Transcript` per run, PnP cert-based app-only auth.
+- **Every decision is traceable.** Audit rows carry a `TopReasons` string showing which rules fired. Offboarding actions append one row to `offboard.csv` per run, written in a `finally` block so mid-sequence failures still log what completed. Every run captures a transcript. 
 
 Both tools were built solo in production against a hybrid AD / Entra environment. The audit report is the investigative backstop for accounts L1 and HR miss. It runs weekly, lands in SharePoint for HR and IT to review together, and over the first three months in production surfaced 100+ at-risk accounts that hadn't moved through the standard offboarding workflow. Offboard.ps1 is what L2 reaches for when one of those flagged accounts needs action. It does not replace the L1 offboarding runbook. It runs from one command, picks up where it left off if a step fails part-way, and writes every action to a CSV.
 
