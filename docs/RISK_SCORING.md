@@ -24,7 +24,7 @@ Every account in the audit report gets a `RiskScore` and a `TopReasons` string. 
 | In external stale list (when `-StaleListPath` supplied) | | +2 |
 | Service / privileged pattern (don't flag system accounts as users) | | -2 |
 | Rare-login title (licensed by design) | | -1 |
-| Manual / grounds / property role (no license expected) | | +2 |
+| No-license-expected role (per your title rules) | | +2 |
 
 ## Vetoes
 
@@ -42,9 +42,9 @@ Vetoes fire on:
 The role-aware section is the part most likely to need tuning for your environment. Two distinct cases that look similar but score in opposite directions:
 
 1. **Rare-login titles, licensed by design.** Field or shift-worker roles where the company has decided everyone gets a license even though they sign in rarely. Inactivity here is expected, not staleness. The score is adjusted DOWN.
-2. **Roles that should not hold licenses at all.** Manual, grounds, property, maintenance roles. If they have a license and rarely use it, that's a reclaim candidate. The score is adjusted UP.
+2. **Roles that should not hold licenses at all.** Roles your org has decided do not need a paid seat. If such an account holds a license and rarely uses it, that's a reclaim candidate. The score is adjusted UP.
 
-Edit `$rareLoginTitlePatterns` and the manual-roles regex (search the script for `Manual/grounds`) to match your environment.
+Edit `$rareLoginTitlePatterns` and the no-license-role regex in the script to match the titles in your environment.
 
 ## TopReasons
 

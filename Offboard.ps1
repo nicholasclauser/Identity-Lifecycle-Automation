@@ -25,7 +25,7 @@
 .NOTES
     PowerShell 7 recommended (uses WinPS compat shim for the AD module).
     Reads optional config from a .env file next to this script:
-      DISABLED_OU_NAME    = name of the target OU (default: User_Disabled_Master)
+      DISABLED_OU_NAME    = name of the target OU (default: Disabled_Users)
       SENSITIVE_SURNAMES  = regex pattern of surnames to block
 #>
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
@@ -71,7 +71,7 @@ function Get-DotEnv {
 }
 
 $envMap            = Get-DotEnv -Path (Join-Path $scriptDir '.env')
-$TargetOuName      = if ($envMap.ContainsKey('DISABLED_OU_NAME'))   { $envMap['DISABLED_OU_NAME'] }   else { 'User_Disabled_Master' }
+$TargetOuName      = if ($envMap.ContainsKey('DISABLED_OU_NAME'))   { $envMap['DISABLED_OU_NAME'] }   else { 'Disabled_Users' }
 $sensitiveSurnames = if ($envMap.ContainsKey('SENSITIVE_SURNAMES')) { $envMap['SENSITIVE_SURNAMES'] } else { $null }
 
 # Suppress -WhatIf for the read-only setup phase. Get-ADUser and Get-ADOrganizationalUnit
@@ -122,7 +122,8 @@ foreach ($p in $blockedPatterns) {
     }
 }
 
-$ouResults = @(Get-ADOrganizationalUnit -Filter "Name -eq '$TargetOuName'" -ErrorAction Stop)
+$ouNameEsc = $TargetOuName -replace "'", "''"
+$ouResults = @(Get-ADOrganizationalUnit -Filter "Name -eq '$ouNameEsc'" -ErrorAction Stop)
 if ($ouResults.Count -eq 0) { Write-Error "Target OU '$TargetOuName' not found."; return }
 if ($ouResults.Count -gt 1) { Write-Error "Multiple OUs named '$TargetOuName', can't disambiguate."; return }
 $targetOu = $ouResults[0]
@@ -181,7 +182,7 @@ if ($needsDisable) {
 }
 
 if ($needsMove) {
-    Write-Host '    [2] MOVE to User_Disabled_Master' -ForegroundColor Cyan
+    Write-Host "    [2] MOVE to $TargetOuName" -ForegroundColor Cyan
     Write-Host "        Target: $($targetOu.DistinguishedName)"
 } else {
     Write-Host '    [2] MOVE: skip (already in target OU)' -ForegroundColor DarkGray

@@ -600,8 +600,8 @@ function Get-AgeBucket([int]$days) {
   }
 }
 
-# Default rare-login title pattern(s); can be extended by editing this array
-$rareLoginTitlePatterns = @('(?i)^funeral')
+# Titles licensed by design but that sign in rarely. Set these for your org.
+$rareLoginTitlePatterns = @('(?i)^fieldstaff')
 
 $inventory | ForEach-Object {
   $now = Get-Date
@@ -660,15 +660,16 @@ $inventory | ForEach-Object {
     # Two distinct cases that look similar but should score in opposite directions:
     #   (1) Rare-login titles (e.g. field roles licensed by design): score DOWN.
     #       These users are expected to sign in rarely. Inactivity is not staleness.
-    #   (2) Roles that should not hold licenses at all (manual/grounds/property work):
+    #   (2) Roles your org has decided should not hold a paid seat at all:
     #       score UP. If they have a license and rarely use it, it's reclaim-eligible.
     # Adjust both pattern lists for your environment.
     if ($_.Title) {
       foreach ($pat in $rareLoginTitlePatterns) {
         if ($_.Title -match $pat) { $score -= 1; $reasons += 'Role: Rare-login (licensed by design)'; break }
       }
-      if ($_.Title -match '(?i)(groundsperson|grounds|property|maintenance|landscap)') {
-        $score += 2; $reasons += 'Role: Manual/grounds (no license expected)'
+      # example no-license titles; replace with the ones that apply in your org
+      if ($_.Title -match '(?i)(fieldrole|seasonal|contractor)') {
+        $score += 2; $reasons += 'Role: no license expected'
       }
     }
   }
